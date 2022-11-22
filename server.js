@@ -5,6 +5,10 @@ const path = require('path');
 const cors = require('cors');
 const history = require('connect-history-api-fallback');
 
+
+var bodyParser = require("body-parser");
+var mqttHandler = require('./controller/mqtt-handler');
+
 const mongoURI = 'mongodb://127.0.0.1:27017/dentistClinicDB';
 const port = process.env.PORT || 3001;
 
@@ -14,7 +18,7 @@ module.exports = app;
 
 
 function connectToDatabase(mongoURI) {
-    mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, function(err) {
+    mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, function (err) {
         if (err) {
             console.error(`Failed to connect to MongoDB with URI: ${mongoURI}`);
             console.error(err.stack);
@@ -54,6 +58,7 @@ function setupApp() {
 }
 
 function addRoutesToApp(app) {
+
     app.get('/api', function(req, res) {
         res.json({ 'message': 'Welcome to your Distributed Systems Baby' });
     });
@@ -61,6 +66,8 @@ function addRoutesToApp(app) {
     /**
      * Add controllers here
      */
+
+    // Catch all non-error handler for api (i.e., 404 Not Found)
     var BookingRequestController = require('./controllers/controller.js')
     app.use('/api/BookingRequests', BookingRequestController)
 
@@ -96,3 +103,18 @@ function addErrorHandlerToApp(app, env) {
         res.json(err_res);
     });
 }
+
+
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }))
+
+var mqttClient = new mqttHandler();
+mqttClient.connect();
+
+// Routes
+app.post("/send-mqtt", function(req, res) {
+  mqttClient.sendMessage(req.body.message);
+  res.status(200).send("Message sent to mqtt");
+});
+
