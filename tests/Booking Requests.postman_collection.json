@@ -1,0 +1,356 @@
+{
+	"info": {
+		"_postman_id": "05aa0fb6-0ed3-4e53-86e2-fb72345521af",
+		"name": "Booking Requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23100753"
+	},
+	"item": [
+		{
+			"name": "Create booking request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Response body should be type JSON\", function(){",
+							"    pm.response.to.have.jsonBody();",
+							"})",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Data type of the response\", function () {",
+							"  pm.expect(jsonData).to.be.an(\"object\");",
+							"  pm.expect(jsonData.user.email).to.be.a(\"string\");",
+							"  pm.expect(jsonData.user.name).to.be.a(\"string\");",
+							"  pm.expect(jsonData.clinicId).to.be.a(\"string\");",
+							"  pm.expect(jsonData.issuance).to.be.a(\"string\");",
+							"  pm.expect(jsonData.date).to.be.a(\"date\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user\": {\n        \"email\": \"email@gmail.com\",\n        \"name\": \"Josh\"\n    },\n    \"clinicId\": 1,\n    \"issuance\": \"1602406766314\",\n    \"date\": \"2020-12-14\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/bookingRequests",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"bookingRequests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get booking request by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Response body should be type JSON\", function(){",
+							"    pm.response.to.have.jsonBody();",
+							"})",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Data type of the response\", function () {",
+							"  pm.expect(jsonData).to.be.an(\"object\");",
+							"  pm.expect(jsonData.user.email).to.be.a(\"string\");",
+							"  pm.expect(jsonData.user.name).to.be.a(\"string\");",
+							"  pm.expect(jsonData.clinicId).to.be.a(\"string\");",
+							"  pm.expect(jsonData.issuance).to.be.a(\"string\");",
+							"  pm.expect(jsonData.date).to.be.a(\"date\");",
+							"  pm.expect(jsonData.state).to.be.a(\"date\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/bookingRequests/:id",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"bookingRequests",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "6375418133895b1828b9bca8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all bookings",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Response body should be type JSON\", function(){",
+							"    pm.response.to.have.jsonBody();",
+							"})",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Data type of the response\", function () {",
+							"  pm.expect(jsonData).to.be.an(\"object\");",
+							"  pm.expect(jsonData.user.email).to.be.a(\"string\");",
+							"  pm.expect(jsonData.user.name).to.be.a(\"string\");",
+							"  pm.expect(jsonData.clinicId).to.be.a(\"string\");",
+							"  pm.expect(jsonData.issuance).to.be.a(\"string\");",
+							"  pm.expect(jsonData.date).to.be.a(\"date\");",
+							"  pm.expect(jsonData.state).to.be.a(\"date\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/bookingRequests/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"bookingRequests",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a specific booking request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/bookingRequests/:id",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"bookingRequests",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch booking request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check body is not null\", function() {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).not.eq(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user\": {\n        \"email\": \"email@gmail.com\",\n        \"name\": \"Josh\"\n    },\n    \"clinicId\": 1,\n    \"issuance\": \"1602406766314\",\n    \"date\": \"2020-12-14\",\n    \"state\": \"approved\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/bookingRequests/:id",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"bookingRequests",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "6375418133895b1828b9bca8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put booking request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check that user is not null\", function() {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.user).not.eq(null);",
+							"});",
+							"",
+							"pm.test(\"Check that clinicId is not null\", function() {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.clinicId).not.eq(null);",
+							"});",
+							"",
+							"pm.test(\"Check that issuance is not null\", function() {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.issuance).not.eq(null);",
+							"});",
+							"",
+							"pm.test(\"Check that date is not null\", function() {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.date).not.eq(null);",
+							"});",
+							"",
+							"pm.test(\"Check that state is not null\", function() {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.state).not.eq(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user\": {\n        \"email\": \"email@gmail.com\",\n        \"name\": \"Josh\"\n    },\n    \"clinicId\": 1,\n    \"issuance\": \"1602406766314\",\n    \"date\": \"2020-12-14\",\n    \"state\": \"denied\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/bookingRequests/:id",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"bookingRequests",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
