@@ -26,14 +26,14 @@ router.put('/:id', function(req, res, next) {
         var date = req.body.date
         var user_ID = req.body.user_ID
         var issuance = req.body.issuance
-        var clinic_ID = req.body.clinic_ID
+        var clinicId = req.body.clinicId
         if (!(/^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/.test(date))){
             return res.json({"message": "Date must be in DD-MM-YYYY format"});
         } else if (date === null) {
             return res.json({ "message": "Date is required" });
         } else {
         bookingRequest.user_ID = user_ID
-        bookingRequest.clinic_ID = clinic_ID
+        bookingRequest.clinicId = clinicId
         bookingRequest.issuance = issuance
         bookingRequest.date = date
         bookingRequest.state = state
@@ -52,7 +52,7 @@ router.patch('/:id', function(req, res, next) {
             return res.status(404).json({ "message": "Booking request was not found" });
         }
         bookingRequest.user_ID = (req.body.user_ID || bookingRequest.user_ID)
-        bookingRequest.clinic_ID = (req.body.clinic_ID || bookingRequest.clinic_ID)
+        bookingRequest.clinicId = (req.body.clinicId || bookingRequest.clinicId)
         bookingRequest.issuance = (req.body.issuance || bookingRequest.issuance)
         bookingRequest.date = (req.body.date || bookingRequest.date)
         bookingRequest.state = (req.body.state || bookingRequest.state)
