@@ -41,7 +41,7 @@ function startApp(port) {
         if (err) throw err;
         console.log(`Express server listening on port ${port}, in ${env} mode`);
         console.log(`Backend: http://localhost:${port}/api/`);
-        console.log(`Frontend (production): http://localhost:${port}/`);
+        //console.log(`Frontend (production): http://localhost:${port}/`);
     });
 
     return app;
