@@ -1,7 +1,6 @@
 const mqtt = require("mqtt");
 const ClinicBookingController = require("./bookingController");
-const approveBooking = require("./bookingController");
-const denieBooking = require("./bookingController");
+
 
 const clinic = new ClinicBookingController();
 class MqttHandler {
@@ -10,10 +9,11 @@ class MqttHandler {
     this.host = "http://localhost:1883";
     this.username = "YOUR_USER"; // mqtt credentials if these are needed to connect
     this.password = "YOUR_PASSWORD";
-
+    // sub and pub topics for booking creation
     this.bookingRequestTopic = "request/availability/good";
     this.sendConfirmation = "response/booking/confirmed";
 
+    // sub topics for altering fields
     this.AlterApproveBooking = "request/booking/approve";
     this.AlterBookingDenied = "request/booking/denied";
   }
@@ -58,7 +58,7 @@ mosquitto_sub -v -t 'response/booking/confirmed'
           const confirmation = await clinic.createBooking(
             JSON.parse(message.toString())
           );
-          localMqttClient.publish("response/booking/confirmed", confirmation);
+          localMqttClient.publish('response/booking/confirmed', confirmation);
           console.log("Sent to Client: " + confirmation);
           break;
 
@@ -66,15 +66,16 @@ mosquitto_sub -v -t 'response/booking/confirmed'
           const response = await clinic.approveBooking(
             JSON.parse(message.toString())
           );
-          //localMqttClient.publish('response/booking/approve', response);
+          localMqttClient.publish('response/booking/approve', response);
           console.log(response);
           break;
+// mosquitto_sub -v -t 'response/booking/confirmed'
 
         case "request/booking/denied":
           const bookingResponse = await clinic.denieBooking(
             JSON.parse(message.toString())
           );
-          //localMqttClient.publish('response/booking/denied', bookingResponse);
+          localMqttClient.publish('response/booking/denied', bookingResponse);
           console.log(bookingResponse);
           break;
       }

@@ -2,7 +2,7 @@ var BookingRequest = require("../models/bookingRequest.js");
 
 /*
 Create a new booking from the incomming mqtt message.
-mosquitto_pub -t 'request/availability/good' -m '{"email": "AM2Z@gmail.com","name": "Carl","clinicId": 1,"issuance": "1602406766314","date": "2020-12-14", "start": "0900", "end": "1000"}'
+mosquitto_pub -t 'request/availability/good' -m '{"email": "Sa22m1B@gmail.com","name": "Carl Dahlqvist","clinicId": 1,"issuance": "1602406766314","date": "2020-12-14", "start": "0900", "end": "1000"}'
 */
 class ClinicBookingController {
   createBooking = async (reservation) => {
@@ -22,19 +22,19 @@ class ClinicBookingController {
         end: end,
       });
 
-      //console.log('bookingrequest: ' + reservation)
       reservation.save((err) => {
         if (err) return console.log(err);
-        else return JSON.stringify(reservation);
-        // console.log(JSON.stringify(reservation))
+        else
+        return reservation
       });
+      return '{message: ' + reservation ;
     } catch (error) {
       console.log(error);
     }
   };
-  /* 
+  /*
 Function changes the state field to 'approved', it finds it by id.
-mosquitto_pub -t 'request/booking/approve' -m '{"_id": "6383cc2c39a711d9cf6772bb"}'
+mosquitto_pub -t 'request/booking/approve' -m '{"_id": "638601e0ebc2434c8afb2f68"}'
 */
   approveBooking = async (request) => {
     try {
@@ -50,6 +50,8 @@ mosquitto_pub -t 'request/booking/approve' -m '{"_id": "6383cc2c39a711d9cf6772bb
         bookingRequest.state = "approved";
         bookingRequest.save();
       });
+      return '{message: "Booking request has been approved"}'
+
     } catch (error) {
       console.log(error);
     }
@@ -57,10 +59,10 @@ mosquitto_pub -t 'request/booking/approve' -m '{"_id": "6383cc2c39a711d9cf6772bb
 
   /* 
 Function changes the state field to 'denied', it finds it by id.
-mosquitto_pub -t 'request/booking/denied' -m '{"_id": "6383cb76f1578e5e752b1444"}'
+mosquitto_pub -t 'request/booking/denied' -m '{"_id": "6386090bc204079856c8b479"}'
 */
 
-  denieBooking = async (request, res) => {
+  denieBooking = async (request) => {
     try {
       const { _id } = request;
 
@@ -74,6 +76,8 @@ mosquitto_pub -t 'request/booking/denied' -m '{"_id": "6383cb76f1578e5e752b1444"
         bookingRequest.state = "denied";
         bookingRequest.save();
       });
+      return '{message: "Booking request has been denied"}'
+
     } catch (error) {
       console.log(error);
     }
