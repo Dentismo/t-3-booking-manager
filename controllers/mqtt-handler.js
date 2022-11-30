@@ -69,7 +69,6 @@ mosquitto_sub -v -t 'response/booking/confirmed'
           localMqttClient.publish('response/booking/approve', response);
           console.log(response);
           break;
-// mosquitto_sub -v -t 'response/booking/confirmed'
 
         case "request/booking/denied":
           const bookingResponse = await clinic.denieBooking(
@@ -81,12 +80,6 @@ mosquitto_sub -v -t 'response/booking/confirmed'
       }
     });
   }
-  /*
-  // Sends a mqtt message to topic: mytopic
-  sendMessage(message) {
-    this.mqttClient.publish(this.sendConfirmation, message);
-  }
-  */
 }
 
 module.exports = MqttHandler;
