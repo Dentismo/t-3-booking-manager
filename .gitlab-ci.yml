@@ -1,0 +1,18 @@
+image: node:latest
+
+# Cache modules in between jobs per-branch
+cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+    - server/node_modules/
+
+stages:
+  - build
+  - eslint
+
+build:
+  stage: build
+  tags:
+    - docker
+  script:
+    - npm install
