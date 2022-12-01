@@ -1,18 +1,21 @@
+const { default: mongoose } = require("mongoose");
+const { parse } = require("path");
 var BookingRequest = require("../models/bookingRequest.js");
 
 /*
 Create a new booking from the incomming mqtt message.
-mosquitto_pub -t 'request/availability/good' -m '{"email": "Sa22m1B@gmail.com","name": "Carl Dahlqvist","clinicId": 1,"issuance": "1602406766314","date": "2020-12-14", "start": "0900", "end": "1000"}'
+mosquitto_pub -t 'response/createBooking' -m '{"email": "Sa22m1B@gmail.com","name": "Carl Dahlqvist","clinicId": 1,"issuance": "1602406766314","date": "2020-12-14", "start": "0900", "end": "1000"}'
+mosquitto_pub -t 'request/createBooking' -m '{"email": "test2@gmail.com","name": "Carl Dahlqvist","clinicId": 1,"issuance": "1602406766314","date": "2020-12-14", "start": "0900", "end": "1000", "details": "ajaj"}'
+
 */
 class ClinicBookingController {
-  createBooking = async (reservation) => {
+  createBooking = async (booking) => {
     try {
-      const { email, name, clinicId, issuance, date, state, start, end } =
-        reservation;
-      reservation = new BookingRequest({
+      const { user: {email, name}, clinicId, issuance, date, state, start, end, details } = booking;
+      booking = new BookingRequest({
         user: {
           email: email,
-          name: name,
+          name: name
         },
         clinicId: clinicId,
         issuance: issuance,
@@ -20,14 +23,15 @@ class ClinicBookingController {
         state: state,
         start: start,
         end: end,
+        details: details
       });
 
-      reservation.save((err) => {
+      booking.save((err) => {
         if (err) return console.log(err);
         else
-        return reservation
+        return booking
       });
-      return '{message: ' + reservation ;
+      return '{message: ' + booking;
     } catch (error) {
       console.log(error);
     }
@@ -50,7 +54,7 @@ mosquitto_pub -t 'request/booking/approve' -m '{"_id": "638601e0ebc2434c8afb2f68
         bookingRequest.state = "approved";
         bookingRequest.save();
       });
-      return '{message: "Booking request has been approved"}'
+      return {message: "Booking request has been approved"}
 
     } catch (error) {
       console.log(error);
@@ -76,7 +80,7 @@ mosquitto_pub -t 'request/booking/denied' -m '{"_id": "6386090bc204079856c8b479"
         bookingRequest.state = "denied";
         bookingRequest.save();
       });
-      return '{message: "Booking request has been denied"}'
+      return {message: "Booking request has been denied"}
 
     } catch (error) {
       console.log(error);

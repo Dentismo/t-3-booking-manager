@@ -10,7 +10,8 @@ class MqttHandler {
     this.username = "YOUR_USER"; // mqtt credentials if these are needed to connect
     this.password = "YOUR_PASSWORD";
     // sub and pub topics for booking creation
-    this.bookingRequestTopic = "request/availability/good";
+    // this.bookingRequestTopic = 'request/createBooking';
+    this.bookingRequestTopic = 'request/createBooking';
     this.sendConfirmation = "response/booking/confirmed";
 
     // sub topics for altering fields
@@ -52,13 +53,14 @@ mosquitto_sub -v -t 'response/booking/confirmed'
     //TODO: Create function that checks if the payload of the mqtt is valid JSON format.
 
     // When a message arrives, console.log it
-    this.mqttClient.on("message", async function (topic, message) {
+    this.mqttClient.on('message', async function (topic, message) {
       switch (topic) {
-        case "request/availability/good":
+        case 'request/createBooking':
           const confirmation = await clinic.createBooking(
             JSON.parse(message.toString())
           );
-          localMqttClient.publish('response/booking/confirmed', confirmation);
+          localMqttClient.publish('response/avalibility', JSON.stringify(confirmation));
+          console.log(JSON.parse(message.toString()));
           console.log("Sent to Client: " + confirmation);
           break;
 
@@ -66,7 +68,7 @@ mosquitto_sub -v -t 'response/booking/confirmed'
           const response = await clinic.approveBooking(
             JSON.parse(message.toString())
           );
-          localMqttClient.publish('response/booking/approve', response);
+          localMqttClient.publish('response/booking/approve', JSON.stringify(response));
           console.log(response);
           break;
 
@@ -74,12 +76,14 @@ mosquitto_sub -v -t 'response/booking/confirmed'
           const bookingResponse = await clinic.denieBooking(
             JSON.parse(message.toString())
           );
-          localMqttClient.publish('response/booking/denied', bookingResponse);
+          localMqttClient.publish('response/booking/denied', JSON.stringify(bookingResponse));
           console.log(bookingResponse);
           break;
       }
     });
   }
+
 }
+
 
 module.exports = MqttHandler;
