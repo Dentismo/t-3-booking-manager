@@ -34,7 +34,7 @@ When a incoming message with the topic `request/createBooking` is sent to this c
     "start": "0900",
     "end": "1000",
     "details": "My tooth hurts
-    }
+}
 ```
 
 #### **Case 2.**
@@ -44,7 +44,7 @@ When a incoming message with the topic `request/booking/approve'` is sent to thi
 ```ruby
 {
     "_id": "637f992b4793782041e5648f"
-    }
+}
 ```
 #### **Case 3.**
 When a incoming message with the topic `request/booking/denied` is sent to this component from the client. On this topic the manager alters the `state` field of a pending booking request to `denied` in the database. The payload message is the _id of a booking request.Where it continues to publish a response message which the client intercepts.
@@ -54,7 +54,7 @@ When a incoming message with the topic `request/booking/denied` is sent to this 
 ```ruby
 {
     "_id": "637f992b4793782041e5648f"
-    }
+}
 ```
 
 ## Support
