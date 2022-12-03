@@ -9,11 +9,8 @@ class MqttHandler {
     this.host = "http://localhost:1883";
     this.username = "YOUR_USER"; // mqtt credentials if these are needed to connect
     this.password = "YOUR_PASSWORD";
-    // sub and pub topics for booking creation
-    // this.bookingRequestTopic = 'request/createBooking';
-    this.bookingRequestTopic = 'request/createBooking';
-    this.sendConfirmation = "response/booking/confirmed";
 
+    this.bookingRequestTopic = 'request/createBooking';
     // sub topics for altering fields
     this.AlterApproveBooking = "request/booking/approve";
     this.AlterBookingDenied = "request/booking/denied";
@@ -49,8 +46,6 @@ mosquitto_sub -v -t 'response/booking/confirmed'
       this.mqttClient.subscribe(this.AlterApproveBooking, { qos: 1 });
       this.mqttClient.subscribe(this.AlterBookingDenied, { qos: 1 });
     });
-
-    //TODO: Create function that checks if the payload of the mqtt is valid JSON format.
 
     // When a message arrives, console.log it
     this.mqttClient.on('message', async function (topic, message) {

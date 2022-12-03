@@ -6,7 +6,6 @@ var bookingRequestSchema = new Schema({
         email: {
             type: String,
             required: true,
-            //unique: false,
             match: /^\w+(\.-?\w+)*@\w+(\.-?\w+)*(\.\w{2,3})+$/
         },
         name: {
@@ -18,7 +17,7 @@ var bookingRequestSchema = new Schema({
         type: String,
         minLength: 1,
         required: true,
-        // match: [/^[0-9]*$/, 'Field may only contain numbers.']
+        match: [/^[0-9]*$/, 'Field may only contain numbers.']
     },
     issuance: {
         type: String,
