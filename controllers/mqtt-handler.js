@@ -88,7 +88,7 @@ class MqttHandler {
         // Get bookings and send list to client via MQTT
         case "clinicPortal/bookingRequests/request":
           const responseBookings = await clinic.getBookings(message.toString());
-          client.publish(
+          localMqttClient.publish(
             "clinicPortal/bookingRequests/response",
             responseBookings
           );
