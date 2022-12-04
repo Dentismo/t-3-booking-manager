@@ -7,10 +7,10 @@ const history = require('connect-history-api-fallback');
 
 
 var bodyParser = require("body-parser");
-var mqttHandler = require('./controller/mqtt-handler');
+var mqttHandler = require('./controllers/mqtt-handler');
 
 const mongoURI = 'mongodb://127.0.0.1:27017/dentistClinicDB';
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3007;
 
 connectToDatabase(mongoURI);
 const app = startApp(port);
@@ -41,7 +41,7 @@ function startApp(port) {
         if (err) throw err;
         console.log(`Express server listening on port ${port}, in ${env} mode`);
         console.log(`Backend: http://localhost:${port}/api/`);
-        console.log(`Frontend (production): http://localhost:${port}/`);
+        //console.log(`Frontend (production): http://localhost:${port}/`);
     });
 
     return app;
@@ -112,9 +112,4 @@ app.use(bodyParser.urlencoded({ extended: true }))
 var mqttClient = new mqttHandler();
 mqttClient.connect();
 
-// Routes
-app.post("/send-mqtt", function(req, res) {
-  mqttClient.sendMessage(req.body.message);
-  res.status(200).send("Message sent to mqtt");
-});
 
