@@ -90,7 +90,7 @@ class MqttHandler {
           const responseBookings = await clinic.getBookings(message.toString());
           localMqttClient.publish(
             "clinicPortal/bookingRequests/response",
-            responseBookings
+            JSON.stringify(responseBookings)
           );
           console.log(responseBookings);
           break;

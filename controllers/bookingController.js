@@ -48,10 +48,10 @@ class ClinicBookingController {
 
       BookingRequest.findById(_id, function (err, bookingRequest) {
         if (err) {
-          return next(err);
+          return { message: 'Error finding booking request'};
         }
         if (!bookingRequest) {
-          return (res = { message: "Booking request was not found" });
+          return { message: "Booking request was not found" };
         }
         bookingRequest.state = "approved";
         bookingRequest.save();
@@ -69,10 +69,10 @@ class ClinicBookingController {
 
       BookingRequest.findById(_id, function (err, bookingRequest) {
         if (err) {
-          return next(err);
+          return { message: 'Error finding booking request'};
         }
         if (!bookingRequest) {
-          return (res = { message: "Booking request was not found" });
+          return { message: "Booking request was not found" };
         }
         bookingRequest.state = "denied";
         bookingRequest.save();
@@ -87,16 +87,16 @@ class ClinicBookingController {
   async getBookings(clinic_id) {
     try {
       if (!mongoose.Types.ObjectId.isValid(clinic_id) || clinic_id === null)
-        return '{message: "ID is not valid for given request"}';
+        return {message: "ID is not valid for given request"};
 
       const dentistsBookings = await Booking.find({ clinicId: clinic_id });
 
-      if (!dentistsBookings) return '{message: "Bookings could not be found"}';
+      if (!dentistsBookings) return {message: "Bookings could not be found"};
 
       return dentistsBookings.toString();
     } catch (error) {
       console.log(error);
-      return '{message: "Bookings could not be found"}';
+      return {message: "Bookings could not be found"};
     }
   }
 }
