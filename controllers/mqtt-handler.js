@@ -57,7 +57,7 @@ class MqttHandler {
             JSON.parse(message.toString())
           );
           localMqttClient.publish(
-            "response/avalibility",
+            "response/availablity",
             JSON.stringify(confirmation)
           );
           console.log(JSON.parse(message.toString()));

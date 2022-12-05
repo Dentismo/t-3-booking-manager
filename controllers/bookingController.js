@@ -34,7 +34,7 @@ class ClinicBookingController {
         if (err) return console.log(err);
         else return booking;
       });
-      return "{message: " + booking;
+      return booking;
     } catch (error) {
       console.log(error);
     }
