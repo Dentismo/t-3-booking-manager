@@ -94,6 +94,15 @@ class MqttHandler {
           );
           console.log(responseBookings);
           break;
+
+        case "request/delete":
+          const deletionResponse = await clinic.deleteBooking(JSON.parse(message.toString()))
+          localMqttClient.publish(
+            "response/delete/" + id,
+            JSON.stringify(deletionResponse)
+          );
+          console.log(deletionResponse);
+          break;
       }
     });
   }
