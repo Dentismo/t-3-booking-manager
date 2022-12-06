@@ -4,7 +4,7 @@ var BookingRequest = require("../models/bookingRequest.js");
 
 // Create a new booking from the incomming mqtt message.
 class ClinicBookingController {
-  createBooking = async (booking) => {
+  createBooking = async (bookingRequest) => {
     try {
       const {
         user: { email, name },
@@ -15,8 +15,8 @@ class ClinicBookingController {
         start,
         end,
         details,
-      } = booking;
-      booking = new BookingRequest({
+      } = bookingRequest.booking;
+      const newBooking = new BookingRequest({
         user: {
           email: email,
           name: name,
@@ -30,11 +30,11 @@ class ClinicBookingController {
         details: details,
       });
 
-      booking.save((err) => {
+      newBooking.save((err) => {
         if (err) return console.log(err);
-        else return booking;
+        else return newBooking;
       });
-      return booking;
+      return newBooking;
     } catch (error) {
       console.log(error);
     }
