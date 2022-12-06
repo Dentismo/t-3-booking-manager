@@ -58,7 +58,7 @@ class ClinicBookingController {
 
 
 // Function changes the state field to 'denied', it finds it by id.
-  denieBooking = async (request) => {
+  denyBooking = async (request) => {
     try {
       const { _id } = request;
 
@@ -78,5 +78,19 @@ class ClinicBookingController {
       console.log(error);
     }
   };
+
+  deleteBooking = async (id) => {
+    try {
+      const result = await BookingRequest.deleteOne({_id: id})
+
+      if(!result) {
+        return {message: `"Failed to delete booking with id ${id}"`}
+      }
+
+      return {message: `"Booking deleted with id ${id}"`}
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 module.exports = ClinicBookingController;

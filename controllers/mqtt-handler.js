@@ -87,7 +87,7 @@ mosquitto_sub -v -t 'response/booking/confirmed'
           break;
         // Patch booking state to "denied" and send response to client via MQTT
         case "request/denied":
-          const bookingResponse = await clinic.denieBooking(
+          const bookingResponse = await clinic.denyBooking(
             JSON.parse(message.toString())
           );
           localMqttClient.publish(
@@ -104,6 +104,15 @@ mosquitto_sub -v -t 'response/booking/confirmed'
             JSON.stringify(responseBookings)
           );
           console.log(responseBookings);
+          break;
+
+        case "request/delete":
+          const deletionResponse = await clinic.deleteBooking(id)
+          localMqttClient.publish(
+            "response/delete/" + id,
+            JSON.stringify(deletionResponse)
+          );
+          console.log(deletionResponse);
           break;
       }
     });
