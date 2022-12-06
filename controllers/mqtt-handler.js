@@ -1,7 +1,6 @@
 const mqtt = require("mqtt");
 const ClinicBookingController = require("./bookingController");
 
-
 const clinic = new ClinicBookingController();
 class MqttHandler {
   constructor() {
@@ -10,14 +9,12 @@ class MqttHandler {
     this.username = "YOUR_USER"; // mqtt credentials if these are needed to connect
     this.password = "YOUR_PASSWORD";
 
-    this.bookingRequestTopic = "request/create-booking/*";
-    this.alterApproveBooking = "request/approve/*";
-    this.alterDenyBooking = "request/denied/*";
-    this.reqestBookingRequestsTopic = "request/booking-requests/*";
+    this.bookingRequestTopic = "request/createBooking";
+    this.AlterApproveBooking = "request/booking/approve";
+    this.AlterBookingDenied = "request/booking/denied";
+    this.reqestBookingRequestsTopic = "clinicPortal/bookingRequests/request";
   }
-  /*
-mosquitto_sub -v -t 'response/booking/confirmed'
-*/
+
   connect() {
     // Connect mqtt with credentials (in case of needed, otherwise we can omit 2nd param)
     try {
@@ -41,84 +38,65 @@ mosquitto_sub -v -t 'response/booking/confirmed'
     this.mqttClient.on("connect", () => {
       console.log('--- Subscribed topics ---');
       console.log(`Mqtt Client connected, Subscribed to '${this.bookingRequestTopic}'\n`);
-      console.log(`Mqtt client connected, Subscribed to '${this.alterApproveBooking}'\n`);
-      console.log(`Mqtt client connected, Subscribed to '${this.alterDenyBooking}'\n`);
-      console.log(`Mqtt client connected, Subscribed to '${this.reqestBookingRequestsTopic}'\n`);
+      console.log(`mqtt client connected, Subscribed to '${this.AlterApproveBooking}'\n`);
+      console.log(`mqtt client connected, Subscribed to '${this.AlterBookingDenied}'\n`);
+      console.log(`mqtt client connected, Subscribed to '${this.reqestBookingRequestsTopic}'\n`);
 
       this.mqttClient.subscribe(this.bookingRequestTopic, { qos: 1 });
-      this.mqttClient.subscribe(this.alterApproveBooking, { qos: 1 });
-      this.mqttClient.subscribe(this.alterDenyBooking, { qos: 1 });
+      this.mqttClient.subscribe(this.AlterApproveBooking, { qos: 1 });
+      this.mqttClient.subscribe(this.AlterBookingDenied, { qos: 1 });
       this.mqttClient.subscribe(this.reqestBookingRequestsTopic, { qos: 1 });
     });
 
     // When a message arrives, console.log it
     this.mqttClient.on("message", async function (topic, message) {
-
-      //-------------------------------------------------------------------\\
-      let incomingTopic = topic.split('/') // array of topic fields
-      const id = s[2]  //   [request, creatBooking, id]
-      incomingTopic = s.splice(2,1) // removes id = [request, createBooking]
-      const finalTopic = s.join('/') // finalTopic = request/creatBooking
-      //--------------------------------------------------------------------\\
-
-      switch (finalTopic) {
+      switch (topic) {
         // On incoming message create booking and send a response to client via MQTT. 
-        case "request/create-booking":
+        case "request/createBooking":
           const confirmation = await clinic.createBooking(
             JSON.parse(message.toString())
           );
           localMqttClient.publish(
-            "response/availablity/" + id,
+            "response/availablity",
             JSON.stringify(confirmation)
           );
           console.log(JSON.parse(message.toString()));
           console.log("Sent to Client: " + confirmation);
           break;
         // Patch booking state to "approved" and send response to client via MQTT
-        case "request/approve":
+        case "request/booking/approve":
           const response = await clinic.approveBooking(
             JSON.parse(message.toString())
           );
           localMqttClient.publish(
-            "response/approve/" + id,
+            "response/booking/approve",
             JSON.stringify(response)
           );
           console.log(response);
           break;
         // Patch booking state to "denied" and send response to client via MQTT
-        case "request/denied":
-          const bookingResponse = await clinic.denyBooking(
+        case "request/booking/denied":
+          const bookingResponse = await clinic.denieBooking(
             JSON.parse(message.toString())
           );
           localMqttClient.publish(
-            "response/denied/" + id,
+            "response/booking/denied",
             JSON.stringify(bookingResponse)
           );
           console.log(bookingResponse);
           break;
         // Get bookings and send list to client via MQTT
-        case "request/booking-requests":
+        case "clinicPortal/bookingRequests/request":
           const responseBookings = await clinic.getBookings(message.toString());
           localMqttClient.publish(
-            "response/booking-requests/" + id,
+            "clinicPortal/bookingRequests/response",
             JSON.stringify(responseBookings)
           );
           console.log(responseBookings);
           break;
-
-        case "request/delete":
-          const deletionResponse = await clinic.deleteBooking(id)
-          localMqttClient.publish(
-            "response/delete/" + id,
-            JSON.stringify(deletionResponse)
-          );
-          console.log(deletionResponse);
-          break;
       }
     });
   }
-
 }
-
 
 module.exports = MqttHandler;
