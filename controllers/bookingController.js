@@ -63,7 +63,7 @@ class ClinicBookingController {
   };
 
   // Function changes the state field to 'denied', it finds it by id.
-  denieBooking = async (request) => {
+  denyBooking = async (request) => {
     try {
       const { _id } = request;
 
