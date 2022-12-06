@@ -83,18 +83,6 @@ class ClinicBookingController {
     }
   };
 
-  deleteBooking = async (request) => {
-    try {
-      const { _id } = request
-
-      const result = await BookingRequest.deleteOne({_id: _id})
-
-      if(!result) return {message: `Cannot delete booking with id ${_id}`}
-
-      return {message: `Booking with id ${_id} deleted`}
-    } catch(err) { console.log(err) }
-  }
-
   // Returns the list of bookings for the specific clinic
   async getBookings(clinic_id) {
     try {
@@ -111,5 +99,19 @@ class ClinicBookingController {
       return {message: "Bookings could not be found"};
     }
   }
+
+  //delete booking with id in request body
+  deleteBooking = async (request) => {
+    try {
+      const { _id } = request
+
+      const result = await BookingRequest.deleteOne({_id: _id})
+
+      if(!result) return {message: `Cannot delete booking with id ${_id}`}
+
+      return {message: `Booking with id ${_id} deleted`}
+    } catch(err) { console.log(err) }
+  }
+
 }
 module.exports = ClinicBookingController;

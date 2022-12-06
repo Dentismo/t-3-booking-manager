@@ -98,12 +98,21 @@ mosquitto_sub -v -t 'response/booking/confirmed'
           break;
         // Get bookings and send list to client via MQTT
         case "request/booking-requests":
-          const responseBookings = await clinic.getBookings(JSON.parse(message.toString()));
+          const responseBookings = await clinic.getBookings(message.toString());
           localMqttClient.publish(
             "response/booking-requests/" + id,
             JSON.stringify(responseBookings)
           );
           console.log(responseBookings);
+          break;
+
+        case "request/delete":
+          const deletionResponse = await clinic.deleteBooking(JSON.parse(message.toString()))
+          localMqttClient.publish(
+            "response/delete/" + id,
+            JSON.stringify(deletionResponse)
+          );
+          console.log(deletionResponse);
           break;
       }
     });
