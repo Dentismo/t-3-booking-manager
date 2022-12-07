@@ -107,7 +107,6 @@ mosquitto_sub -v -t 'response/booking/confirmed'
             "response/booking-requests/" + id,
             JSON.stringify(responseBookings)
           );
-          console.log(responseBookings);
           break;
 
         case "request/delete":
@@ -124,5 +123,7 @@ mosquitto_sub -v -t 'response/booking/confirmed'
     });
   }
 }
+
+// mosquitto_pub -t 'request/booking-requests' -m '"1"'
 
 module.exports = MqttHandler;
