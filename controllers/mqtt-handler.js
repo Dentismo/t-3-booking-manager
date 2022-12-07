@@ -1,7 +1,6 @@
 const mqtt = require("mqtt");
 const ClinicBookingController = require("./bookingController");
 
-
 const clinic = new ClinicBookingController();
 class MqttHandler {
   constructor() {
@@ -10,10 +9,10 @@ class MqttHandler {
     this.username = "YOUR_USER"; // mqtt credentials if these are needed to connect
     this.password = "YOUR_PASSWORD";
 
-    this.bookingRequestTopic = "request/create-booking/*";
-    this.alterApproveBooking = "request/approve/*";
-    this.alterDenyBooking = "request/denied/*";
-    this.reqestBookingRequestsTopic = "request/booking-requests/*";
+    this.bookingRequestTopic = "request/create-booking/#";
+    this.alterApproveBooking = "request/approve/#";
+    this.alterDenyBooking = "request/denied/#";
+    this.reqestBookingRequestsTopic = "request/booking-requests/#";
   }
   /*
 mosquitto_sub -v -t 'response/booking/confirmed'
@@ -39,11 +38,19 @@ mosquitto_sub -v -t 'response/booking/confirmed'
 
     // Connection callback
     this.mqttClient.on("connect", () => {
-      console.log('--- Subscribed topics ---');
-      console.log(`Mqtt Client connected, Subscribed to '${this.bookingRequestTopic}'\n`);
-      console.log(`Mqtt client connected, Subscribed to '${this.alterApproveBooking}'\n`);
-      console.log(`Mqtt client connected, Subscribed to '${this.alterDenyBooking}'\n`);
-      console.log(`Mqtt client connected, Subscribed to '${this.reqestBookingRequestsTopic}'\n`);
+      console.log("--- Subscribed topics ---");
+      console.log(
+        `Mqtt Client connected, Subscribed to '${this.bookingRequestTopic}'\n`
+      );
+      console.log(
+        `Mqtt client connected, Subscribed to '${this.alterApproveBooking}'\n`
+      );
+      console.log(
+        `Mqtt client connected, Subscribed to '${this.alterDenyBooking}'\n`
+      );
+      console.log(
+        `Mqtt client connected, Subscribed to '${this.reqestBookingRequestsTopic}'\n`
+      );
 
       this.mqttClient.subscribe(this.bookingRequestTopic, { qos: 1 });
       this.mqttClient.subscribe(this.alterApproveBooking, { qos: 1 });
@@ -53,16 +60,16 @@ mosquitto_sub -v -t 'response/booking/confirmed'
 
     // When a message arrives, console.log it
     this.mqttClient.on("message", async function (topic, message) {
-
+      console.log(topic, message.toString());
       //-------------------------------------------------------------------\\
-      let incomingTopic = topic.split('/') // array of topic fields
-      const id = s[2]  //   [request, creatBooking, id]
-      incomingTopic = s.splice(2,1) // removes id = [request, createBooking]
-      const finalTopic = s.join('/') // finalTopic = request/creatBooking
+      let incomingTopic = topic.split("/"); // array of topic fields
+      const id = incomingTopic[2]; //   [request, creatBooking, id]
+      incomingTopic.splice(2, 1); // removes id = [request, createBooking]
+      const finalTopic = incomingTopic.join("/"); // finalTopic = request/creatBooking
       //--------------------------------------------------------------------\\
 
       switch (finalTopic) {
-        // On incoming message create booking and send a response to client via MQTT. 
+        // On incoming message create booking and send a response to client via MQTT.
         case "request/create-booking":
           const confirmation = await clinic.createBooking(
             JSON.parse(message.toString())
@@ -71,8 +78,6 @@ mosquitto_sub -v -t 'response/booking/confirmed'
             "response/availablity/" + id,
             JSON.stringify(confirmation)
           );
-          console.log(JSON.parse(message.toString()));
-          console.log("Sent to Client: " + confirmation);
           break;
         // Patch booking state to "approved" and send response to client via MQTT
         case "request/approve":
@@ -94,7 +99,6 @@ mosquitto_sub -v -t 'response/booking/confirmed'
             "response/denied/" + id,
             JSON.stringify(bookingResponse)
           );
-          console.log(bookingResponse);
           break;
         // Get bookings and send list to client via MQTT
         case "request/booking-requests":
@@ -107,7 +111,9 @@ mosquitto_sub -v -t 'response/booking/confirmed'
           break;
 
         case "request/delete":
-          const deletionResponse = await clinic.deleteBooking(JSON.parse(message.toString()))
+          const deletionResponse = await clinic.deleteBooking(
+            JSON.parse(message.toString())
+          );
           localMqttClient.publish(
             "response/delete/" + id,
             JSON.stringify(deletionResponse)
@@ -117,8 +123,6 @@ mosquitto_sub -v -t 'response/booking/confirmed'
       }
     });
   }
-
 }
-
 
 module.exports = MqttHandler;
