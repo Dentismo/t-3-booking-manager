@@ -86,7 +86,7 @@ class ClinicBookingController {
   // Returns the list of bookings for the specific clinic
   async getBookings(clinicQuery) {
     try {
-     var clinicId = JSON.parse(clinicQuery).clinicID
+     var clinicId = JSON.parse(clinicQuery).clinicId
       //   if (!mongoose.Types.ObjectId.isValid(clinic_id) || clinic_id === null)
       //     return { message: "ID is not valid for given request" };
 
@@ -94,7 +94,7 @@ class ClinicBookingController {
         clinicId,
       });
 
-      //   if (!dentistsBookings) return { message: "Bookings could not be found" };
+      if (!dentistsBookings) return { message: "Bookings could not be found" };
 
       //   return dentistsBookings.toString();
       return dentistsBookings;
