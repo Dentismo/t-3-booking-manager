@@ -7,7 +7,8 @@ class ClinicBookingController {
   createBooking = async (bookingRequest) => {
     try {
       const {
-        user: { email, name },
+        email,
+        name,
         clinicId,
         issuance,
         date,
