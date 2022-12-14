@@ -71,11 +71,12 @@ mosquitto_sub -v -t 'response/booking/confirmed'
       switch (finalTopic) {
         // On incoming message create booking and send a response to client via MQTT.
         case "request/create-booking":
+          console.log(" SFDSSSSSSSSSSSSSSSSSS");
           const confirmation = await clinic.createBooking(
             JSON.parse(message.toString())
           );
           localMqttClient.publish(
-            "response/availablity/" + id,
+            "response/availability/" + id,
             JSON.stringify(confirmation)
           );
           break;

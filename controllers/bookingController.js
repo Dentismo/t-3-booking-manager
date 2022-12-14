@@ -6,36 +6,16 @@ const BookingRequest = require("../models/bookingRequest.js");
 class ClinicBookingController {
   createBooking = async (bookingRequest) => {
     try {
-      const {
-        email,
-        name,
-        clinicId,
-        issuance,
-        date,
-        state,
-        start,
-        end,
-        details,
-      } = bookingRequest.booking;
-      const newBooking = new BookingRequest({
-        user: {
-          email: email,
-          name: name,
-        },
-        clinicId: clinicId,
-        issuance: issuance,
-        date: date,
-        state: state,
-        start: start,
-        end: end,
-        details: details,
-      });
+      console.log(bookingRequest.booking);
+
+      const newBooking = new BookingRequest(bookingRequest.booking);
+      console.log(newBooking);
 
       newBooking.save((err) => {
         if (err) return console.log(err);
         else return newBooking;
       });
-      return newBooking;
+      return { accepted: true, booking: newBooking };
     } catch (error) {
       console.log(error);
     }
@@ -87,7 +67,7 @@ class ClinicBookingController {
   // Returns the list of bookings for the specific clinic
   async getBookings(clinicQuery) {
     try {
-     var clinicId = JSON.parse(clinicQuery).clinicId
+      var clinicId = JSON.parse(clinicQuery).clinicId;
       //   if (!mongoose.Types.ObjectId.isValid(clinic_id) || clinic_id === null)
       //     return { message: "ID is not valid for given request" };
 
