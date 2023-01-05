@@ -10,7 +10,7 @@ var bodyParser = require("body-parser");
 var mqttHandler = require("./controllers/mqtt-handler");
 
 const mongoURI =
-  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/dentistClinicDB";
+ process.env.MONGO_URI || "mongodb://127.0.0.1:27017/dentistClinicDB";
 const port = process.env.PORT || 3007;
 
 connectToDatabase(mongoURI);
